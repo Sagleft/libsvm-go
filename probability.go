@@ -25,23 +25,24 @@ import (
 	"time"
 )
 
-/**
-* This function does classification or regression on a test vector x
-   given a model with probability information.
+/*
+*
 
-   For a classification model with probability information, this
-   function gives nrClass probability estimates in the slice
-   probabilityEstimate. The class with the highest probability is returned
-   in returnValue. For regression/one-class SVM, probabilityEsstimate is nil,
-   and returnValue is the same as that of Predict.
+  - This function does classification or regression on a test vector x
+    given a model with probability information.
 
+    For a classification model with probability information, this
+    function gives nrClass probability estimates in the slice
+    probabilityEstimate. The class with the highest probability is returned
+    in returnValue. For regression/one-class SVM, probabilityEsstimate is nil,
+    and returnValue is the same as that of Predict.
 */
 func (model Model) PredictProbability(x map[int]float64) (returnValue float64, probabilityEstimate []float64) {
 
-	if (model.param.SvmType == C_SVC || model.param.SvmType == NU_SVC) &&
-		model.probA != nil && model.probB != nil {
+	if (model.Param.SvmType == C_SVC || model.Param.SvmType == NU_SVC) &&
+		model.ProbA != nil && model.ProbB != nil {
 
-		var nrClass int = model.nrClass
+		var nrClass int = model.NRClass
 		_, decisionValues := model.PredictValues(x)
 
 		var minProb float64 = 1e-7
@@ -54,7 +55,7 @@ func (model Model) PredictProbability(x map[int]float64) (returnValue float64, p
 		var k int = 0
 		for i := 0; i < nrClass; i++ {
 			for j := i + 1; j < nrClass; j++ {
-				m := maxf(sigmoidPredict(decisionValues[k], model.probA[k], model.probB[k]), minProb)
+				m := maxf(sigmoidPredict(decisionValues[k], model.ProbA[k], model.ProbB[k]), minProb)
 				pairWiseProb[i][j] = minf(m, 1-minProb)
 				pairWiseProb[j][i] = 1 - pairWiseProb[i][j]
 				k++
@@ -70,7 +71,7 @@ func (model Model) PredictProbability(x map[int]float64) (returnValue float64, p
 			}
 		}
 
-		returnValue = float64(model.label[maxIdx])
+		returnValue = float64(model.Label[maxIdx])
 		return // returnValue, probabilityEstimates
 	} else {
 		probabilityEstimate = nil
@@ -236,7 +237,7 @@ func binarySvcProbability(prob *Problem, param *Parameter, Cp, Cn float64) (prob
 				idx := prob.x[perm[j]]
 				x := SnodeToMap(prob.xSpace[idx:])
 				_, subProbDecision := subModel.PredictValues(x)
-				decisionValues[perm[j]] = subProbDecision[0] * float64(subModel.label[0])
+				decisionValues[perm[j]] = subProbDecision[0] * float64(subModel.Label[0])
 			}
 		}
 	}
