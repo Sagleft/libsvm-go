@@ -133,7 +133,6 @@ func (problem *Problem) Done() bool {
  */
 func (problem *Problem) Next() {
 	problem.i++
-	return
 }
 
 /**

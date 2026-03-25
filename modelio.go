@@ -107,7 +107,7 @@ func (model *Model) Dump(file string) error {
 
 		i_idx := model.SV[i]
 		if model.Param.KernelType == PRECOMPUTED {
-			output = append(output, fmt.Sprintf("0:%d ", model.SVSpace[i_idx]))
+			output = append(output, fmt.Sprintf("0:%v ", model.SVSpace[i_idx]))
 		} else {
 			for model.SVSpace[i_idx].index != -1 {
 				index := model.SVSpace[i_idx].index
@@ -267,11 +267,8 @@ func (model *Model) readHeader(reader *bufio.Reader) error {
 			return nil // done reading the header!
 		default:
 			return fmt.Errorf("unknown text in model file: [%s]\n", tokens[0])
-
 		}
 	}
-
-	return fmt.Errorf("Fail to completely read header")
 }
 
 func (model *Model) ReadModel(file string) error {
