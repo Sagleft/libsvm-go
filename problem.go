@@ -27,8 +27,8 @@ import (
 )
 
 type SNode struct {
-	Index int     // dimension (-1 indicates end of SV)
-	Value float64 // coeff
+	Index int     `json:"i"` // dimension (-1 indicates end of SV)
+	Value float64 `json:"v"` // coeff
 }
 
 type Problem struct {

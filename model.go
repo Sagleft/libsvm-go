@@ -25,18 +25,18 @@ import (
 )
 
 type Model struct {
-	Param     *Parameter
-	L         int
-	NRClass   int
-	Label     []int
-	Rho       []float64
-	NSV       []int
-	SV        []int
-	SVSpace   []SNode
-	SVIndices []int
-	SVCoef    [][]float64
-	ProbA     []float64
-	ProbB     []float64
+	Param     *Parameter  `json:"param"`
+	L         int         `json:"l"`
+	NRClass   int         `json:"nrClass"`
+	Label     []int       `json:"label"`
+	Rho       []float64   `json:"rho"`
+	NSV       []int       `json:"nsv"`
+	SV        []int       `json:"sv"`
+	SVSpace   []SNode     `json:"svSpace"`
+	SVIndices []int       `json:"svIndices"`
+	SVCoef    [][]float64 `json:"svCoef"`
+	ProbA     []float64   `json:"probA"`
+	ProbB     []float64   `json:"probB"`
 }
 
 func NewModel(param *Parameter) *Model {
