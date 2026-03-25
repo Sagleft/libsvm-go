@@ -26,16 +26,16 @@ import (
 	"strings"
 )
 
-type snode struct {
-	index int     // dimension (-1 indicates end of SV)
-	value float64 // coeff
+type SNode struct {
+	Index int     // dimension (-1 indicates end of SV)
+	Value float64 // coeff
 }
 
 type Problem struct {
 	l      int       // #SVs
 	y      []float64 // labels
 	x      []int     // starting indices in xSpace defining SVs
-	xSpace []snode   // SV coeffs
+	xSpace []SNode   // SV coeffs
 	i      int       // counter for iterator
 }
 
@@ -90,7 +90,7 @@ func (problem *Problem) Read(file string, param *Parameter) error { // reads the
 					if value, err = strconv.ParseFloat(node[1], 64); err != nil {
 						return fmt.Errorf("Fail to parse value from token %v\n", w)
 					}
-					problem.xSpace = append(problem.xSpace, snode{index: index, value: value})
+					problem.xSpace = append(problem.xSpace, SNode{Index: index, Value: value})
 					if index > max_idx {
 						max_idx = index
 					}
@@ -99,7 +99,7 @@ func (problem *Problem) Read(file string, param *Parameter) error { // reads the
 			}
 		}
 
-		problem.xSpace = append(problem.xSpace, snode{index: -1})
+		problem.xSpace = append(problem.xSpace, SNode{Index: -1})
 		l++
 	}
 	problem.l = l

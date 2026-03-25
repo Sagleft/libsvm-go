@@ -32,7 +32,7 @@ type Model struct {
 	Rho       []float64
 	NSV       []int
 	SV        []int
-	SVSpace   []snode
+	SVSpace   []SNode
 	SVIndices []int
 	SVCoef    [][]float64
 	ProbA     []float64

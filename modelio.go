@@ -109,9 +109,9 @@ func (model *Model) Dump(file string) error {
 		if model.Param.KernelType == PRECOMPUTED {
 			output = append(output, fmt.Sprintf("0:%v ", model.SVSpace[i_idx]))
 		} else {
-			for model.SVSpace[i_idx].index != -1 {
-				index := model.SVSpace[i_idx].index
-				value := model.SVSpace[i_idx].value
+			for model.SVSpace[i_idx].Index != -1 {
+				index := model.SVSpace[i_idx].Index
+				value := model.SVSpace[i_idx].Value
 				output = append(output, fmt.Sprintf("%d:%.8g ", index, value))
 				i_idx++
 			}
@@ -328,10 +328,10 @@ func (model *Model) ReadModel(file string) error {
 				if value, err = strconv.ParseFloat(node[1], 64); err != nil {
 					return fmt.Errorf("Fail to parse value from token %v\n", token)
 				}
-				model.SVSpace = append(model.SVSpace, snode{index: index, value: value})
+				model.SVSpace = append(model.SVSpace, SNode{Index: index, Value: value})
 			}
 		}
-		model.SVSpace = append(model.SVSpace, snode{index: -1})
+		model.SVSpace = append(model.SVSpace, SNode{Index: -1})
 		i++
 	}
 
