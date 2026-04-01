@@ -39,7 +39,11 @@ type Problem struct {
 	i      int       // counter for iterator
 }
 
-func NewProblem(file string, param *Parameter) (*Problem, error) {
+func NewProblem() *Problem {
+	return &Problem{l: 0, i: 0}
+}
+
+func NewProblemFromFile(file string, param *Parameter) (*Problem, error) {
 	prob := &Problem{l: 0, i: 0}
 	err := prob.Read(file, param)
 	return prob, err
@@ -156,25 +160,20 @@ func (problem *Problem) ProblemSize() int {
 }
 
 /**
- * Add adds a single training instance to the Problem directly from memory.
- * @param nodes - slice of SNode structures (the feature vector)
- * @param y - class label (e.g., 1.0 or 0.0)
+ * Add adds a pre-built slice of SNodes to the Problem.
+ * @param nodes - slice of SNodes (should already include the -1 terminator)
+ * @param y - class label
  */
 func (problem *Problem) Add(nodes []SNode, y float64) {
-	// 1. Record the starting index of this vector in the flat xSpace array
+	// Record the starting position in xSpace
 	problem.x = append(problem.x, len(problem.xSpace))
 
-	// 2. Add the target class label
+	// Add the label
 	problem.y = append(problem.y, y)
 
-	// 3. Append feature nodes to the global xSpace
-	for _, node := range nodes {
-		problem.xSpace = append(problem.xSpace, node)
-	}
+	// Append all nodes (including the terminator from MapToSnode)
+	problem.xSpace = append(problem.xSpace, nodes...)
 
-	// 4. Append the LibSVM terminator node (Index: -1) to mark the end of the vector
-	problem.xSpace = append(problem.xSpace, SNode{Index: -1})
-
-	// 5. Increment the total number of training instances
+	// Increment instance count
 	problem.l++
 }
