@@ -83,6 +83,9 @@ func (k rbf) compute(i, j int) float64 {
 	var idx_i int = k.x[i]
 	var idx_j int = k.x[j]
 	q := k.x_square[i] + k.x_square[j] - 2.0*dot(k.xSpace[idx_i:], k.xSpace[idx_j:])
+	if q < 0 {
+		q = 0 // float fix
+	}
 	return math.Exp(-k.gamma * q)
 }
 
