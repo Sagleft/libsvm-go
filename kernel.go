@@ -143,13 +143,13 @@ func newSigmoid(x []int, xSpace []SNode, gamma, coef0 float64) sigmoid {
 func newKernel(prob *Problem, param *Parameter) (kernelFunction, error) {
 	switch param.KernelType {
 	case LINEAR:
-		return newLinear(prob.x, prob.xSpace), nil
+		return newLinear(prob.X, prob.XSpace), nil
 	case POLY:
-		return newPoly(prob.x, prob.xSpace, param.Gamma, param.Coef0, param.Degree), nil
+		return newPoly(prob.X, prob.XSpace, param.Gamma, param.Coef0, param.Degree), nil
 	case RBF:
-		return newRBF(prob.x, prob.xSpace, prob.l, param.Gamma), nil
+		return newRBF(prob.X, prob.XSpace, prob.L, param.Gamma), nil
 	case SIGMOID:
-		return newSigmoid(prob.x, prob.xSpace, param.Gamma, param.Coef0), nil
+		return newSigmoid(prob.X, prob.XSpace, param.Gamma, param.Coef0), nil
 	}
 	return nil, errors.New("unsupported kernel")
 }

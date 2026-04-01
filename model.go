@@ -55,14 +55,14 @@ func (model Model) NrClass() int {
 }
 
 func groupClasses(prob *Problem) (nrClass int, label []int, start []int, count []int, perm []int) {
-	var l int = prob.l
+	var l int = prob.L
 
 	label = make([]int, 0)
 	count = make([]int, 0)
 	data_label := make([]int, l)
 
 	for i := 0; i < l; i++ { // find unqie labels and put them in the label slice
-		this_label := int(prob.y[i])
+		this_label := int(prob.Y[i])
 		var j int
 		for j = 0; j < len(label); j++ {
 			if this_label == label[j] {
@@ -119,10 +119,10 @@ func (model *Model) classification(prob *Problem) {
 
 	nrClass, label, start, count, perm := groupClasses(prob) // group SV with the same labels together
 
-	var l int = prob.l
+	var l int = prob.L
 	x := make([]int, l)
 	for i := 0; i < l; i++ {
-		x[i] = prob.x[perm[i]] // this is the new x slice with the grouped SVs
+		x[i] = prob.X[perm[i]] // this is the new x slice with the grouped SVs
 	}
 
 	weighted_C := make([]float64, nrClass)
@@ -167,18 +167,18 @@ func (model *Model) classification(prob *Problem) {
 			ci := count[i] // number of SV from x[si] that are related to label i
 			cj := count[j] // number of SV from x[sj] that are related to label j
 
-			subProb.xSpace = prob.xSpace // inherits the space
-			subProb.l = ci + cj          // focus only on 2 labels
-			subProb.x = make([]int, subProb.l)
-			subProb.y = make([]float64, subProb.l)
+			subProb.XSpace = prob.XSpace // inherits the space
+			subProb.L = ci + cj          // focus only on 2 labels
+			subProb.X = make([]int, subProb.L)
+			subProb.Y = make([]float64, subProb.L)
 			for k := 0; k < ci; k++ {
-				subProb.x[k] = x[si+k] // starting indices for first label
-				subProb.y[k] = 1
+				subProb.X[k] = x[si+k] // starting indices for first label
+				subProb.Y[k] = 1
 			}
 
 			for k := 0; k < cj; k++ {
-				subProb.x[ci+k] = x[sj+k] // starting indices for second label
-				subProb.y[ci+k] = -1
+				subProb.X[ci+k] = x[sj+k] // starting indices for second label
+				subProb.Y[ci+k] = -1
 			}
 
 			if model.Param.Probability {
@@ -246,7 +246,7 @@ func (model *Model) classification(prob *Problem) {
 	}
 
 	model.L = totalSV
-	model.SVSpace = prob.xSpace
+	model.SVSpace = prob.XSpace
 
 	model.SV = make([]int, totalSV)
 	model.SVIndices = make([]int, totalSV)
@@ -319,23 +319,23 @@ func (model *Model) regressionOneClass(prob *Problem) {
 		model.Rho = append(model.Rho, decision_result.rho)
 
 		var nSV int = 0
-		for i := 0; i < prob.l; i++ {
+		for i := 0; i < prob.L; i++ {
 			if math.Abs(decision_result.alpha[i]) > 0 {
 				nSV++
 			}
 		}
 
 		model.L = nSV
-		model.SVSpace = prob.xSpace
+		model.SVSpace = prob.XSpace
 		model.SV = make([]int, nSV)
 		model.SVCoef = make([][]float64, 1)
 		model.SVCoef[0] = make([]float64, nSV)
 		model.SVIndices = make([]int, nSV)
 
 		var j int = 0
-		for i := 0; i < prob.l; i++ {
+		for i := 0; i < prob.L; i++ {
 			if math.Abs(decision_result.alpha[i]) > 0 {
-				model.SV[j] = prob.x[i]
+				model.SV[j] = prob.X[i]
 				model.SVCoef[0][j] = decision_result.alpha[i]
 				model.SVIndices[j] = i + 1
 				j++

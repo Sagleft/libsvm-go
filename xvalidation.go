@@ -24,15 +24,16 @@ import (
 	"time"
 )
 
-/**
-*  This function conducts cross validation. Data are separated to
-   nrFold folds. Under given parameters, sequentially each fold is
-   validated using the model from training the remaining. Predicted
-   labels (of all prob's instances) in the validation process are
-   stored in the slice called target.
+/*
+*
+  - This function conducts cross validation. Data are separated to
+    nrFold folds. Under given parameters, sequentially each fold is
+    validated using the model from training the remaining. Predicted
+    labels (of all prob's instances) in the validation process are
+    stored in the slice called target.
 */
 func CrossValidation(prob *Problem, param *Parameter, nrFold int) (target []float64) {
-	var l int = prob.l
+	var l int = prob.L
 
 	target = make([]float64, l) // slice to return
 
@@ -115,20 +116,20 @@ func CrossValidation(prob *Problem, param *Parameter, nrFold int) (target []floa
 
 		var subProb Problem
 
-		subProb.xSpace = prob.xSpace // inherit problem space
-		subProb.l = l - (end - begin)
-		subProb.x = make([]int, subProb.l)
-		subProb.y = make([]float64, subProb.l)
+		subProb.XSpace = prob.XSpace // inherit problem space
+		subProb.L = l - (end - begin)
+		subProb.X = make([]int, subProb.L)
+		subProb.Y = make([]float64, subProb.L)
 
 		var k int = 0
 		for j := 0; j < begin; j++ {
-			subProb.x[k] = prob.x[perm[j]]
-			subProb.y[k] = prob.y[perm[j]]
+			subProb.X[k] = prob.X[perm[j]]
+			subProb.Y[k] = prob.Y[perm[j]]
 			k++
 		}
 		for j := end; j < l; j++ {
-			subProb.x[k] = prob.x[perm[j]]
-			subProb.y[k] = prob.y[perm[j]]
+			subProb.X[k] = prob.X[perm[j]]
+			subProb.Y[k] = prob.Y[perm[j]]
 			k++
 		}
 
@@ -138,14 +139,14 @@ func CrossValidation(prob *Problem, param *Parameter, nrFold int) (target []floa
 		if param.Probability &&
 			(param.SvmType == C_SVC || param.SvmType == NU_SVC) {
 			for j := begin; j < end; j++ {
-				idx := prob.x[perm[j]]
-				x := SnodeToMap(prob.xSpace[idx:])
+				idx := prob.X[perm[j]]
+				x := SnodeToMap(prob.XSpace[idx:])
 				target[perm[j]], _ = subModel.PredictProbability(x)
 			}
 		} else {
 			for j := begin; j < end; j++ {
-				idx := prob.x[perm[j]]
-				x := SnodeToMap(prob.xSpace[idx:])
+				idx := prob.X[perm[j]]
+				x := SnodeToMap(prob.XSpace[idx:])
 				target[perm[j]] = subModel.Predict(x)
 			}
 		}
