@@ -154,3 +154,27 @@ func (problem *Problem) GetLine() (y float64, x map[int]float64) {
 func (problem *Problem) ProblemSize() int {
 	return problem.l
 }
+
+/**
+ * Add adds a single training instance to the Problem directly from memory.
+ * @param nodes - slice of SNode structures (the feature vector)
+ * @param y - class label (e.g., 1.0 or 0.0)
+ */
+func (problem *Problem) Add(nodes []SNode, y float64) {
+	// 1. Record the starting index of this vector in the flat xSpace array
+	problem.x = append(problem.x, len(problem.xSpace))
+
+	// 2. Add the target class label
+	problem.y = append(problem.y, y)
+
+	// 3. Append feature nodes to the global xSpace
+	for _, node := range nodes {
+		problem.xSpace = append(problem.xSpace, node)
+	}
+
+	// 4. Append the LibSVM terminator node (Index: -1) to mark the end of the vector
+	problem.xSpace = append(problem.xSpace, SNode{Index: -1})
+
+	// 5. Increment the total number of training instances
+	problem.l++
+}
