@@ -39,7 +39,11 @@ type Problem struct {
 	i      int       // counter for iterator
 }
 
-func NewProblem(file string, param *Parameter) (*Problem, error) {
+func NewProblem() *Problem {
+	return &Problem{l: 0, i: 0}
+}
+
+func NewProblemFromFile(file string, param *Parameter) (*Problem, error) {
 	prob := &Problem{l: 0, i: 0}
 	err := prob.Read(file, param)
 	return prob, err
